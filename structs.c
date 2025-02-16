@@ -45,7 +45,12 @@ typedef struct {
   Row row_to_select;
 } Statement;
 
-#define COLUMN_USERNAME_SIZE 32
+/*
+define keyword is handled by the preprocessor. to define macro constants
+there is no typing, it is directly substituted in text. therefore, cant be debugged/type checked during compilation
+global, and not allocated any memory. since its just a substitution, it can be faster in some cases
+*/ 
+#define COLUMN_USERNAME_SIZE 32 
 #define COLUMN_EMAIL_SIZE 255
 
 typedef struct {
@@ -53,3 +58,13 @@ typedef struct {
   char username[COLUMN_USERNAME_SIZE];
   char email[COLUMN_EMAIL_SIZE];
 } Row;
+
+#define size_of_attribute(struct, attribute) sizeof(((struct*)0)->attribute)
+
+const uint32_t ID_SIZE = size_of_attribute(Row, id);
+const uint32_t USERNAME_SIZE = size_of_attribute(Row, username);
+const uint32_t EMAIL_SIZE = size_of_attribute(Row, username);
+const uint32_t ID_OFFSET = 0;
+const uint32_t USERNAME_OFFSET = ID_OFFSET + ID_SIZE;
+const uint32_t EMAIL_OFFSET = USERNAME_OFFSET + USERNAME_SIZE;
+const uint32_t ROW_SIZE = ID_SIZE + USERNAME_SIZE + EMAIL_SIZE;

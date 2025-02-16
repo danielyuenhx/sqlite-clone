@@ -28,6 +28,19 @@ MetaCommandResult do_meta_command(InputBuffer* input_buffer) {
   }
 }
 
+void serialize_row(Row* source, void* destination) {
+  // memcpy(destination address, source address, size)
+  memcpy(destination + ID_OFFSET, &source->id, ID_SIZE);
+  memcpy(destination + USERNAME_OFFSET, &source->username, USERNAME_SIZE);
+  memcpy(destination + EMAIL_OFFSET, &source->email, EMAIL_SIZE);
+}
+
+void deserialize_row(void* source, Row* destination) {
+  memcpy(&destination->id, source + ID_OFFSET, ID_SIZE);
+  memcpy(&destination->username, source + USERNAME_OFFSET, USERNAME_SIZE);
+  memcpy(&destination->email, source + EMAIL_OFFSET, EMAIL_SIZE);
+}
+
 PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement) {
   if (strncmp(input_buffer->buffer, "insert", 6) == 0) {
     statement->type = STATEMENT_INSERT;
